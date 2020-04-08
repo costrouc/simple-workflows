@@ -32,6 +32,8 @@ def render_bash(rendered_template):
             bash_script.append(f'if [ ! -f "{job["strategy"]["cache"]}" ]; then')
             bash_script.append(
                 textwrap.indent(format_runs(job['runs']).strip(), INDENT))
+            bash_script.append('else')
+            bash_script.append(INDENT + f'echo "skipping job={job["name"]} using cache"')
             bash_script.append('fi')
         else:
             bash_script.append(format_runs(job['runs']).strip())

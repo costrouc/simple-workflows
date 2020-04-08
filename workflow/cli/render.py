@@ -4,6 +4,7 @@ import json
 
 from workflow.render.base import render
 from workflow.render.shell import render_bash
+from workflow.render.airflow import render_airflow
 
 
 def create_render_subcommand(parser):
@@ -30,5 +31,7 @@ def handle_render(args):
         print(json.dumps(rendered_template, indent=4))
     elif args.format == 'bash':
         print(render_bash(rendered_template))
+    elif args.format == 'airflow':
+        print(render_airflow(rendered_template))
     else:
         raise ValueError('format="{format}" not recognized output format for rendering')

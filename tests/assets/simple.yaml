@@ -27,11 +27,6 @@ jobs:
     depends_on: [job1]
     strategy:
       matrix:
-        - key1: values1
-          key2:
-            inputs:
-              input1: "1.txt"
-            runtime: "{{ param.runtimes.scoring }}"
         - key1: values10
           key2:
             inputs:
@@ -39,6 +34,11 @@ jobs:
               input2: "b.txt"
             outputs:
               directory: "/foo/bar"
+        - key1: values1
+          key2:
+            inputs:
+              input1: "1.txt"
+            runtime: "{{ param.runtimes.scoring }}"
     runs: |
       cat /tmp/{{ param.key1 }}.ini
     config:

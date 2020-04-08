@@ -52,17 +52,21 @@ def replace_node(node, parameters):
 
 
 def render_jobs(workflow_template):
-    global_parameters = workflow_template["parameters"]
+    global_parameters = workflow_template.get("parameters", {})
 
     jobs = []
-    for job in workflow_template['jobs']:
-        if 'strategy' in job and 'matrix' in job['strategy']:
-            for job_parameters in job['strategy']['matrix']:
+    for job_template in workflow_template['jobs']:
+        if 'strategy' in job_template and 'matrix' in job_template['strategy']:
+            for job_parameters in job_template['strategy']['matrix']:
                 job_parameters = replace_node(job_parameters, [global_parameters])
-                jobs.append(replace_node(job, [global_parameters, job_parameters]))
+                rendered_job = replace_node(job_template, [global_parameters, job_parameters])
+                rendered_job['strategy'].pop('matrix')
+                jobs.append(rendered_job)
         else:
-            job_parameters = replace_node(job.get('parameters', {}), [global_parameters])
-            jobs.append(replace_node(job, [global_parameters, job_parameters]))
+            job_parameters = replace_node(job_template.get('parameters', {}), [global_parameters])
+            rendered_job = replace_node(job_template, [global_parameters, job_parameters])
+            rendered_job.pop('parameters', None)
+            jobs.append(rendered_job)
     return jobs
 
 
@@ -72,5 +76,15 @@ def render(filename, format='yaml'):
 
     validate_schema(workflow_template)
 
-    workflow_template['jobs'] = render_jobs(workflow_template)
-    return workflow_template
+    rendered_template = {
+        'name': workflow_template['name'],
+        'version': workflow_template['version'],
+        'jobs': render_jobs(workflow_template)
+    }
+
+    if format == 'yaml':
+        return yaml.dump(rendered_template, default_flow_style=False, sort_keys=False)
+    elif format == 'json':
+        return json.dumps(rendered_template)
+    else:
+        raise ValueError('format="{format}" not recognized output format for rendering')

@@ -3,6 +3,7 @@ import yaml
 import json
 
 from workflow.render.base import render
+from workflow.render.shell import render_bash
 
 
 def create_render_subcommand(parser):
@@ -27,5 +28,7 @@ def handle_render(args):
         print(yaml.dump(rendered_template, default_flow_style=False, sort_keys=False))
     elif args.format == 'json':
         print(json.dumps(rendered_template))
+    elif args.format == 'bash':
+        print(render_bash(rendered_template))
     else:
         raise ValueError('format="{format}" not recognized output format for rendering')

@@ -36,4 +36,4 @@ def render_bash(rendered_template):
         else:
             bash_script.append(format_runs(job['runs']).strip())
 
-    return '\n'.join(bash_script)
+    return '\n'.join(bash_script).strip()

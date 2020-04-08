@@ -1,4 +1,6 @@
 import pathlib
+import yaml
+import json
 
 from workflow.render.base import render
 
@@ -16,5 +18,14 @@ def handle_render(args):
     if not filename.is_file():
         raise ValueError(f'specified filename="{filename}" is not a file')
 
-    content = render(filename, format=args.format)
-    print(content)
+    with filename.open() as f:
+        workflow_template = yaml.safe_load(f)
+
+    rendered_template = render(workflow_template)
+
+    if args.format == 'yaml':
+        print(yaml.dump(rendered_template, default_flow_style=False, sort_keys=False))
+    elif args.format == 'json':
+        print(json.dumps(rendered_template))
+    else:
+        raise ValueError('format="{format}" not recognized output format for rendering')

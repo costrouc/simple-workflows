@@ -4,6 +4,7 @@ import re
 import yaml
 
 from workflow.render.schema import validate_schema
+from workflow.render.dependency import topological_sort
 
 PARAMETER_REGEX = r"\s*{{\s*param\.([A-Za-z0-9_\.]+)\s*}}\s*"
 
@@ -70,21 +71,14 @@ def render_jobs(workflow_template):
     return jobs
 
 
-def render(filename, format='yaml'):
-    with open(filename) as f:
-        workflow_template = yaml.safe_load(f)
-
+def render(workflow_template):
     validate_schema(workflow_template)
 
-    rendered_template = {
+    jobs = render_jobs(workflow_template)
+    sorted_jobs = topological_sort(jobs)
+
+    return {
         'name': workflow_template['name'],
         'version': workflow_template['version'],
-        'jobs': render_jobs(workflow_template)
+        'jobs': sorted_jobs
     }
-
-    if format == 'yaml':
-        return yaml.dump(rendered_template, default_flow_style=False, sort_keys=False)
-    elif format == 'json':
-        return json.dumps(rendered_template)
-    else:
-        raise ValueError('format="{format}" not recognized output format for rendering')

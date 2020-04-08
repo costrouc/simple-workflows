@@ -1,0 +1,52 @@
+version: 2
+name: My Job Name
+
+# auto generated parameters
+# jobid
+
+parameters:
+  jobid: 1234
+  runtimes:
+    scoring:
+      cores: 10
+      memory: 10GB
+      backend: spark
+    aggregation:
+      cores: 1
+      memory: 1GB
+      backend: spark
+
+jobs:
+  - name: job2
+    depends_on: [job1]
+    strategy:
+      matrix:
+        - key1: values1
+          key2:
+            inputs:
+              input1: "1.txt"
+            runtime: "{{ param.runtimes.scoring }}"
+        - key1: values10
+          key2:
+            inputs:
+              input1: "a.txt"
+              input2: "b.txt"
+            outputs:
+              directory: "/foo/bar"
+    runs: |
+      cat /tmp/{{ param.key1 }}.ini
+    config:
+      - filename: "/tmp/{{ param.key1 }}.ini"
+        format: ini
+        data: "{{ param.key2 }}"
+  - name: job3
+    depends_on: [job2]
+    runs:
+      - "sleep 2"
+      - 'echo "foo" > "foo.txt"'
+  - name: job1
+    executor: shell
+    directory: "."
+    runs: 'echo "success {{ param.jobid }}" > job1.txt'
+    strategy:
+      cache: job1.txt

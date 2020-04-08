@@ -27,7 +27,7 @@ def handle_render(args):
     if args.format == 'yaml':
         print(yaml.dump(rendered_template, default_flow_style=False, sort_keys=False))
     elif args.format == 'json':
-        print(json.dumps(rendered_template))
+        print(json.dumps(rendered_template, indent=4))
     elif args.format == 'bash':
         print(render_bash(rendered_template))
     else:

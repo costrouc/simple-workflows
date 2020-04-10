@@ -5,6 +5,7 @@ import json
 from workflow.render.base import render
 from workflow.render.shell import render_bash
 from workflow.render.airflow import render_airflow
+from workflow.render.systemd import render_systemd
 
 
 def create_render_subcommand(parser):
@@ -13,7 +14,7 @@ def create_render_subcommand(parser):
     subparser.add_argument(
         "--format",
         default="yaml",
-        choices=["yaml", "bash", "json", "airflow"],
+        choices=["yaml", "bash", "json", "airflow", "systemd"],
         help="format to output workflow",
     )
     subparser.add_argument("workflow", help="workflow configuration")
@@ -38,5 +39,9 @@ def handle_render(args):
         print(render_bash(rendered_template))
     elif args.format == "airflow":
         print(render_airflow(rendered_template))
+    elif args.format == "systemd":
+        for key, value in render_systemd(rendered_template).items():
+            print(f'======== systemd {key} ========')
+            print(f'{value}')
     else:
         raise ValueError('format="{format}" not recognized output format for rendering')

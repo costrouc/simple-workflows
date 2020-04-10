@@ -1,6 +1,10 @@
 version: 2
 name: My Job Name
 
+trigger:
+  systemd:
+    timer: "00:05:00"
+
 # auto generated parameters
 # jobid
 

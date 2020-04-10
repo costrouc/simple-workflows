@@ -3,17 +3,20 @@ import io
 import json
 
 import yaml
+import toml
 
 
 def render_configuration(config, format):
-    if format == 'ini':
+    if format == "ini":
         return render_ini(config)
-    elif format == 'yaml':
+    elif format == "yaml":
         return yaml.dump(config, default_flow_style=False, sort_keys=False)
-    elif format == 'json':
-        return json.dumps(config, indent=4)
+    elif format == "json":
+        return json.dumps(config, indent=4) + "\n"
+    elif format == "toml":
+        return toml.dumps(config)
     else:
-        raise ValueError(f'configuration format={format} not supported')
+        raise ValueError(f"configuration format={format} not supported")
 
 
 def render_ini(config):
@@ -23,4 +26,4 @@ def render_ini(config):
     content = io.StringIO()
     parser.write(content)
     content.seek(0)
-    return content.read().strip()
+    return content.read().strip() + "\n"

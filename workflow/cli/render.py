@@ -10,8 +10,13 @@ from workflow.render.airflow import render_airflow
 def create_render_subcommand(parser):
     subparser = parser.add_subparsers(help="Initialize QHub repository")
     subparser = subparser.add_parser("render")
-    subparser.add_argument("--format", default='yaml', choices=['yaml', 'bash', 'json', 'airflow'], help="format to output workflow")
-    subparser.add_argument('workflow', help='workflow configuration')
+    subparser.add_argument(
+        "--format",
+        default="yaml",
+        choices=["yaml", "bash", "json", "airflow"],
+        help="format to output workflow",
+    )
+    subparser.add_argument("workflow", help="workflow configuration")
     subparser.set_defaults(func=handle_render)
 
 
@@ -25,13 +30,13 @@ def handle_render(args):
 
     rendered_template = render(workflow_template)
 
-    if args.format == 'yaml':
+    if args.format == "yaml":
         print(yaml.dump(rendered_template, default_flow_style=False, sort_keys=False))
-    elif args.format == 'json':
+    elif args.format == "json":
         print(json.dumps(rendered_template, indent=4))
-    elif args.format == 'bash':
+    elif args.format == "bash":
         print(render_bash(rendered_template))
-    elif args.format == 'airflow':
+    elif args.format == "airflow":
         print(render_airflow(rendered_template))
     else:
         raise ValueError('format="{format}" not recognized output format for rendering')

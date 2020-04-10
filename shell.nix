@@ -5,6 +5,11 @@ let
 in
 pkgs.mkShell {
   buildInputs = with pythonPackages; [
-    pythonPackages.pyyaml
+    pyyaml
+    toml
+
+    pytest
+    black
+    flake8
   ];
 }

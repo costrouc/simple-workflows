@@ -1,11 +1,17 @@
 def validate_dependencies(workflow_template):
-    topological_sort(workflow_template['jobs'])
+    topological_sort(workflow_template["jobs"])
 
 
 def topological_sort(jobs):
-    dependencies = {job['name']: job for job in jobs}
-    edges = {job['name']: set(job.get('depends_on', [])) for job in jobs if len(job.get('depends_on', [])) != 0}
-    empty_edges = set(job['name'] for job in jobs if len(job.get('depends_on', [])) == 0)
+    dependencies = {job["name"]: job for job in jobs}
+    edges = {
+        job["name"]: set(job.get("depends_on", []))
+        for job in jobs
+        if len(job.get("depends_on", [])) != 0
+    }
+    empty_edges = set(
+        job["name"] for job in jobs if len(job.get("depends_on", [])) == 0
+    )
     sorted_jobs = []
 
     while empty_edges:
@@ -22,6 +28,8 @@ def topological_sort(jobs):
         edges = new_edges
 
     if len(edges) != 0:
-        raise ValueError(f'cycle detected in jobs remaining unsatisfiable edges={edges}')
+        raise ValueError(
+            f"cycle detected in jobs remaining unsatisfiable edges={edges}"
+        )
 
     return sorted_jobs

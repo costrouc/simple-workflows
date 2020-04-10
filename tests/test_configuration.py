@@ -16,7 +16,7 @@ BASE_WORKFLOW_TEMPLATE = {
                 {
                     "filename": "replace me",
                     "format": "replace me",
-                    "data": {"a1": {"key1": True, "key2": 1}, "a2": {"key1": 1.2,}},
+                    "data": {"a1": {"key1": True, "key2": 1}, "a2": {"key1": 1.2}},
                 }
             ],
         }

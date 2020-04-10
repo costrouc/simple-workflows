@@ -5,13 +5,11 @@ from workflow.render.shell import render_bash
 
 def render_systemd(workflow_template):
     return {
-        'service': render_systemd_service(
-            workflow_template['name'],
-            'fake command'),
-        'timer': render_systemd_timer(
-            workflow_template['name'],
-            workflow_template['trigger']['systemd']['timer']),
-        'script': render_bash(workflow_template)
+        "service": render_systemd_service(workflow_template["name"], "fake command"),
+        "timer": render_systemd_timer(
+            workflow_template["name"], workflow_template["trigger"]["systemd"]["timer"]
+        ),
+        "script": render_bash(workflow_template),
     }
 
 
@@ -27,7 +25,7 @@ WantedBy=timers.target
 """
 
 
-def render_systemd_service(name, command, user=None, group='nobody'):
+def render_systemd_service(name, command, user=None, group="nobody"):
     user = user or getpass.getuser()
 
     return f"""[Unit]

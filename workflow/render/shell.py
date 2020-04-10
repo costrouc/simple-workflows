@@ -13,7 +13,7 @@ def format_runs(runs):
 
 
 def render_bash(rendered_template):
-    bash_script = ['#!/usr/bin/env bash']
+    bash_script = ["#!/usr/bin/env bash"]
 
     for job in rendered_template["jobs"]:
         bash_script.append(f"\n# Job: {job['name']}")

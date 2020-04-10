@@ -1,11 +1,8 @@
 import pathlib
-import yaml
-import json
 
-from workflow.render.base import render
-from workflow.render.shell import render_bash
-from workflow.render.airflow import render_airflow
-from workflow.render.systemd import render_systemd
+import yaml
+
+from workflow.render.format import render_formatted
 
 
 def create_render_subcommand(parser):
@@ -29,19 +26,4 @@ def handle_render(args):
     with filename.open() as f:
         workflow_template = yaml.safe_load(f)
 
-    rendered_template = render(workflow_template)
-
-    if args.format == "yaml":
-        print(yaml.dump(rendered_template, default_flow_style=False, sort_keys=False))
-    elif args.format == "json":
-        print(json.dumps(rendered_template, indent=4))
-    elif args.format == "bash":
-        print(render_bash(rendered_template))
-    elif args.format == "airflow":
-        print(render_airflow(rendered_template))
-    elif args.format == "systemd":
-        for key, value in render_systemd(rendered_template).items():
-            print(f'======== systemd {key} ========')
-            print(f'{value}')
-    else:
-        raise ValueError('format="{format}" not recognized output format for rendering')
+    print(render_formatted(workflow_template, args.format))

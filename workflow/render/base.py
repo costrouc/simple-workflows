@@ -85,6 +85,6 @@ def render(workflow_template):
     return {
         "name": workflow_template["name"],
         "version": workflow_template["version"],
-        "trigger": workflow_template.get('trigger', {}),
+        "trigger": workflow_template.get("trigger", {}),
         "jobs": sorted_jobs,
     }
